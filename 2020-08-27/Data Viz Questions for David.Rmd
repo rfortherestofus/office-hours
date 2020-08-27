@@ -1,0 +1,144 @@
+---
+title: "Applying Data Viz  and Markdown Concepts"
+author: "CT"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.width = 10)
+```
+
+# Student Satisfaction Survey
+
+Hi David. These are just a few mockups I created after taking the advanced data viz lessons. If you might happen to have a few minutes to look over the questions I've listed below, I'd greatly appreciate it. 
+
+```{r}
+library(tidyverse)
+library(forcats)
+library(scales)
+library(readxl)
+library(extrafont)
+
+loadfonts()
+```
+
+## Functions Are Awesome
+
+The use of functions to automate repetitive data-cleaning procedures has been a **life-saver** and I've *already* employed it in my work. Thank you!
+
+```{r}
+test <- read_xlsx("Themes Test.xlsx")
+
+test <- test %>% 
+  pivot_longer(cols = c(2:4),
+               names_to = "response",
+               values_to = "proportion") %>% 
+  mutate(proportion_display = percent(proportion, accuracy = 1)) %>% 
+  mutate(response = 
+           fct_relevel(response,
+                       "Strongly disagree or disagree",
+                       "Neither agree nor disagree",
+                       "Agree or strongly agree"
+           ))
+
+clean_data <- function(data){
+  data %>% 
+    pivot_longer(cols = c(2:4),
+                 names_to = "response",
+                 values_to = "proportion") %>% 
+    mutate(proportion_display = case_when(
+      proportion > 0.05 ~ percent(proportion, accuracy = 1),
+      TRUE ~ "")) %>% 
+    mutate(response = 
+             fct_relevel(response,
+                         "Strongly disagree or disagree",
+                         "Neither agree nor disagree",
+                         "Agree or strongly agree"
+             ))
+}
+
+```
+
+## Visual 1
+
+Here is the first visual. Please see my questions below:
+
+1. Can I adjust the legend position so that it still displays horizontally, but no legend entries are cut off?
+
+1. After some googling around, I used scale_fill_manual to define the colours of the bars. Is there a better approach you might suggest for bar/column charts? (please refer to the code)
+
+1. I also found a stackoverflow thread about how to position the labels (please see 'position=position_stack(vjust=0.5)' in the geom_text function). It does exactly what I want, but I'm not certain how it actually works! Have you used this before?
+
+
+```{r}
+gplot <- function(start_data){
+  
+  start_data %>% 
+    # mutate(question = str_wrap(question, 15)) %>% 
+    ggplot(aes(x = question,
+               y = proportion,
+               fill = response)) +
+    geom_col(width = .5) +
+    scale_y_continuous(label = percent_format(),
+                       limits = c(0,1)) +
+    coord_flip() +
+    theme(text = element_text(size = 14, family="Inter"),
+          legend.position = "top",
+          legend.title = element_blank(),
+          legend.title.align = .5,
+          legend.key.size = unit(4, "mm"),
+          legend.box.just = c(1, 0),
+          panel.background = element_blank(),
+          axis.title = element_blank(),
+          plot.title = element_text(hjust = 0.5),
+          plot.title.position = "plot",
+          axis.text.x = element_text(family = "Inter", face = "bold", size = 12)) +
+    scale_fill_manual("response", values = c("#D3062F", "#ABAAA8", "#14C853")) +
+    geom_text(aes(label = proportion_display),
+              position=position_stack(vjust = 0.5),
+              color = "white",
+              fontface = "bold",
+              size = 4.5) +
+    labs(title = "Students' agreement with questions")
+}
+
+test %>% 
+  gplot()
+
+
+```
+
+## Visual 2
+
+Here is the second visual. Questions:
+
+1. I've used a function to reproduce the same plot for a different set of questions on a different sheet. Is this a recommended approach or am I going a bit too far with creating functions?
+
+1. There is one label I'd like to remove, the "1%" for the last item. Is there a way to prevent the display of labels corresponding to values < ~5%?
+
+1. The last item "students thought the workload was reasonable" is a bit long. Is there a way to break it up onto two lines?
+
+
+```{r}
+test2 <- read_xlsx("Themes Test.xlsx",
+                   sheet = "ver2")
+
+test2 <- clean_data(test2)
+
+test2 %>% 
+  mutate(question = case_when(
+    question == "Students thought the workload was reasonable" ~ "Students thought the\nworkload was reasonable",
+    TRUE ~ question
+  )) %>% 
+  gplot()
+```
+
+
