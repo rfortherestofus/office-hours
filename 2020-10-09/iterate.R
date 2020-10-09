@@ -1,3 +1,9 @@
+
+# Urban Institute Method --------------------------------------------------
+
+# This code is adapted from
+# https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce
+
 library(fivethirtyeight)
 library(tidyverse)
 library(rmarkdown)
@@ -15,6 +21,11 @@ reports %>%
   pwalk(render)
 
 
+# Using multireport -------------------------------------------------------
+
+# Information on the multireport package, including installation instructions, is at
+# https://dgkeyes.github.io/multireport/
+
 library(multireport)
 
 params_df <- bad_drivers %>%
@@ -24,6 +35,6 @@ params_df <- bad_drivers %>%
 multireport(rmarkdown_file = "2020-10-09/report.Rmd",
             report_title_param = "state",
             params_data_frame = params_df,
-            report_output_directory = "output",
-            report_format = "word_document")
+            report_output_directory = "2020-10-09/output",
+            report_format = "html_document")
 
