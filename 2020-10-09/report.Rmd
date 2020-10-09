@@ -1,0 +1,41 @@
+---
+title: "Iterating fact sheets with R Markdown"
+author: "Aaron Williams"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+params:
+  state: "Oregon"
+  year: 2020
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(fivethirtyeight)
+```
+
+This report is about `r params$state`. The year for this report is `r params$year`.
+
+
+
+```{r}
+drivers_subset <- bad_drivers %>%
+  mutate(year = 2020) %>% 
+  filter(state == params$state) %>% 
+  filter(year == params$year)
+
+drivers_subset %>%
+  mutate(perc_distracted = 100 - perc_not_distracted) %>%  
+  select(state, perc_speeding, perc_alcohol, perc_distracted) %>%
+  gather(key = "key", value = "value", -state) %>%
+  ggplot(aes(key, value)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 40)) +  
+  labs(title = stringr::str_glue("Driver condition in fatal crashes in {params$state}"))
+```
+
