@@ -1,0 +1,41 @@
+---
+title: "Robert"
+author: "David Keyes"
+date: "10/23/2020"
+output: html_document
+params:
+  lease_id: 19
+  name: "David"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(flextable)
+```
+
+```{r}
+leases <- read_excel("sampledata.xlsx",
+                     sheet = "tblLeases") %>% 
+  clean_names()
+
+tracts <- read_excel("sampledata.xlsx",
+                     sheet = "tblLseTracts") %>% 
+  clean_names()
+```
+
+```{r}
+tracts %>% 
+  filter(lease_id == params$lease_id) %>% 
+  select(twp:description) %>% 
+  flextable() %>% 
+  width(j = "description",
+        width = 4)
+```
+
+

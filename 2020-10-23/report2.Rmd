@@ -1,0 +1,91 @@
+---
+title: "Iterating Contracts with R Markdown"
+author: "Robert Cline"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document: default
+  pdf_document: default
+params:
+  LeaseNo: 101.01
+  FirstName: David
+  LastName: David
+  Address: P.O. Box 13  
+  City: Chattanooga
+  State: Georgia
+  PostalCode: 37421
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)  
+
+ 
+library(tidyverse)
+library(ggplot2)
+library(readr)
+```
+
+
+### Resources
+* [**David Keyes Parameterized Reporting**](https://rfortherestofus.com/2020/10/parameterized-reporting-with-rmarkdown/)  
+* [**Iterated fact sheets with R Markdown**, from Data@Urban published in Medium.com](https://medium.com/@urban_institute/iterated-fact-sheets-with-r-markdown-d685eb4eafce)  
+
+* [Youtube Parameterized reports by Ashutosh Nandeshwar](https://www.youtube.com/watch?v=m1NLfvDWaNE&t=591s) See 23 minutes "network data".  You can find all the code along with the complementary blog post on my site here: [Ashutosh Nandeshwar's blog](http://nandeshwar.info/data-science-2/how-to-create-automated-analysis-using-r/)
+
+``
+
+This report is about the driving habits of the state of `r params$state'.
+
+### Import Data
+```{r}
+library(readr)
+parameters <- read_csv("../data/parameters.csv") %>% 
+  distinct(LeaseID, .keep_all = TRUE) %>% 
+  rename(State = StateOrProvince) %>%
+  select(1:10)
+View(parameters)
+```
+
+
+
+```{r}
+library(readr)
+tblLseTracts <- read_csv("../data/tblLseTracts.csv", 
+    col_types = cols(CountyID = col_skip()))
+View(tblLseTracts)
+```
+
+`
+
+```{r}
+# Set Parameters
+parameters <- parameters %>%
+    filter(LeaseNo == params$LeaseNo)
+
+```
+
+
+```{r}
+# drivers_subset <- bad_drivers %>%
+#   filter(LeaseNo == params$state)
+# 
+# drivers_subset %>%
+#   mutate(perc_distracted = 100 - perc_not_distracted) %>%  
+#   select(state, perc_speeding, perc_alcohol, perc_distracted) %>%
+#   gather(key = "key", value = "value", -state) %>%  # now use pivot longer
+#   ggplot(aes(key, value)) +
+#   geom_bar(stat = "identity", fill="forestgreen", alpha=0.3) +
+#   scale_y_continuous(expand = c(0, 0), limits = c(0, 40)) +  
+# #  remove_ticks() + # part of Urban Instutute ggplot package
+#   labs(title = stringr::str_glue("Driver condition in fatal crashes in {params$state}"))
+```
+
+
+This report is created on `r format(Sys.time(), '%d %B, %Y')` and covers **LeaseNo `r params$LeaseNo`**.  
+
+
+Lessor:  `r params$FirstName` `r params$LastName`  
+Address: `r params$Address`  
+City: `r params$City`  
+State: `r params$State`  
+Zip Code: `r params$PostalCode`

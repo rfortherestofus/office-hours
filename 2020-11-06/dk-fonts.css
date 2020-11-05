@@ -1,0 +1,66 @@
+/* Variables */
+
+:root {
+    --primary-color: #6cabdd;
+    --header-text-color: #314D63;
+    --text-color: #333333;
+}
+
+/* ----------------- Fonts --------------------- */
+@import url('https://rsms.me/inter/inter.css');
+
+body {
+  font-family: "Inter", Arial, sans-serif;
+  hyphens: auto;
+}
+
+.title {
+  position: absolute;
+    top: 1in;
+    left: 0.5in;
+    font-size: 40pt;
+    color: #ffffff;
+}
+
+.subtitle {
+      position: absolute;
+    top: 2in;
+    left: 0.5in;
+    font-size: 25pt;
+    font-weight: normal;
+       color: #ffffff;
+}
+
+.date {
+      font-weight: normal;
+    position: absolute;
+    top: 2.7in;
+    left: 0.5in;
+       color: #ffffff;
+}
+
+.author {
+      font-weight: normal;
+    position: absolute;
+    bottom: 0.5in;
+    left: 0.5in;
+       color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3;
+  color: var(--header-text-color);
+}
+
+h1 {
+  font-size: 24pt;
+}
+
+h2 {
+  font-size: 18pt;
+}
+
+p {
+  line-height: 1.5;
+  color: var(--text-color);
+}
