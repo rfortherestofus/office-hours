@@ -9,8 +9,8 @@
     --primary-color: #6cabdd;
 }
 
-  /* ------------------ Page size ---------------- */
-  @page {
+/* ------------------ Page size ---------------- */
+@page {
     size: 8.5in 11in; /* var(--pagedjs-width) doesn't work in browser when printing */
      margin: .75in .75in .75in .75in;
 }

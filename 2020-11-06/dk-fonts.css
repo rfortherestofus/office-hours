@@ -22,6 +22,14 @@ body {
     color: #ffffff;
 }
 
+.samplefield {
+  position: absolute;
+    top: 1.5in;
+    left: 0.5in;
+    font-size: 40pt;
+    color: #ffffff;
+}
+
 .subtitle {
       position: absolute;
     top: 2in;
