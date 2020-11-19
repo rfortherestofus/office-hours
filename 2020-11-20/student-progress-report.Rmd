@@ -1,0 +1,61 @@
+---
+title: "Student Progress Report"
+description: |
+A new article created using the Distill format.
+author:
+  - name: Nora Jones 
+    url: https://example.com/norajones
+    affiliation: Spacely Sprockets
+    affiliation_url: https://example.com/spacelysprokets
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+assessment_data <- read_csv("Assessment 2020-2021.csv") %>% 
+  clean_names()
+
+sight_words <- assessment_data %>% 
+  select(class, student, my:like) %>% 
+  pivot_longer(cols = -c(class, student),
+               names_to = "word",
+               values_to = "completed")
+
+phonics <- assessment_data %>% 
+  select(class, student, t_letter:at) %>% 
+  pivot_longer(cols = -c(class, student),
+               names_to = "word",
+               values_to = "completed")
+```
+
+# Sight Words
+
+```{r}
+sight_words %>% 
+  group_by(class, word) %>% 
+  summarize(total_completed = sum(completed),
+            total_students = n()) %>% 
+  ungroup() %>% 
+  mutate(percent_completed = total_completed / total_students)
+```
+```{r}
+assessment_data %>% 
+  group_by(class) %>% 
+  summarize(across(.cols = my:like,
+                   .fns = list(sum = sum)))
+
+```
+
+
+
+# Phonics
+
