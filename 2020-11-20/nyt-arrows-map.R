@@ -51,21 +51,22 @@ county_map <- get_urbn_map("counties", sf = TRUE) %>%
   mutate(y = map_dbl(geometry, pluck, 2)) %>%
   st_drop_geometry() %>%
   left_join(election_results, by = "county_fips") %>%
-  mutate(winner = case_when(
+  mutate(direction = case_when(
     change_dem_vs_gop > 0 ~ "Democrats",
     TRUE ~ "Republicans"
   )) %>%
   mutate(xend = case_when(
-    winner == "Democrats" ~ x - (250000 * change_dem_vs_gop),
-    winner == "Republicans" ~ x - (250000 * change_dem_vs_gop)
+    direction == "Democrats" ~ x - (250000 * change_dem_vs_gop),
+    direction == "Republicans" ~ x - (250000 * change_dem_vs_gop)
   )) %>%
   mutate(yend = case_when(
-    winner == "Democrats" ~ y + (200000 * change_dem_vs_gop),
-    winner == "Republicans" ~ y - (200000 * change_dem_vs_gop)
+    direction == "Democrats" ~ y + (200000 * change_dem_vs_gop),
+    direction == "Republicans" ~ y - (200000 * change_dem_vs_gop)
   )) %>%
   filter(abs(change_dem_vs_gop) > 0.03)
 
 state_map <- get_urbn_map(map = "states", sf = TRUE)
+
 
 
 # Visualization -----------------------------------------------------------
@@ -74,12 +75,12 @@ ggplot() +
   geom_sf(data = state_map,
           color = "white") +
   geom_segment(data = county_map,
-             aes(x = x,
-                 xend = xend,
-                 y = y,
-                 yend = yend,
-                 color = winner),
-             arrow = arrow(length = unit(0.05, "cm"))) +
+               aes(x = x,
+                   xend = xend,
+                   y = y,
+                   yend = yend,
+                   color = direction),
+               arrow = arrow(length = unit(0.05, "cm"))) +
   scale_color_manual(values = c(
     "Democrats" = "blue",
     "Republicans" = "red"

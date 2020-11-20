@@ -1,0 +1,120 @@
+---
+title: "Student Progress Report"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(scales)
+library(gt)
+library(downloadthis)
+```
+
+```{r}
+assessment_data <- read_csv("Assessment 2020-2021.csv") %>% 
+  clean_names()
+
+sight_words <- assessment_data %>% 
+  select(class:like) %>% 
+  pivot_longer(cols = -(class:student),
+               names_to = "word",
+               values_to = "mastered")
+
+phonics <- assessment_data %>% 
+  select(class, student, t_letter:at) %>% 
+  pivot_longer(cols = -(class:student),
+               names_to = "word",
+               values_to = "mastered")
+
+```
+
+# Sight Words
+
+```{r, layout = "l-page"}
+sight_words_by_class <- sight_words %>% 
+  group_by(class, word) %>% 
+  summarize(number_mastered = sum(mastered),
+            total = n()) %>% 
+  ungroup() %>% 
+  mutate(percentage_mastered = number_mastered / total) %>% 
+  mutate(percentage_pretty = percent(percentage_mastered, accuracy = 1)) %>% 
+  mutate(number_and_percent = str_glue("{number_mastered} ({percentage_pretty})")) %>% 
+  pivot_wider(id_cols = class, 
+              names_from = word,
+              values_from = number_and_percent)
+
+sight_words_total <- sight_words %>% 
+  group_by(word) %>% 
+  summarize(number_mastered = sum(mastered),
+            total = n()) %>% 
+  ungroup() %>% 
+  mutate(percentage_mastered = number_mastered / total) %>% 
+  mutate(percentage_pretty = percent(percentage_mastered, accuracy = 1)) %>% 
+  mutate(number_and_percent = str_glue("{number_mastered} ({percentage_pretty})")) %>% 
+  mutate(class = "Total") %>% 
+  pivot_wider(id_cols = class, 
+              names_from = word,
+              values_from = number_and_percent)
+
+sight_words_by_class %>% 
+  bind_rows(sight_words_total) %>% 
+  gt()
+```
+
+```{r}
+sight_words_by_class %>% 
+  bind_rows(sight_words_total) %>% 
+  download_this(
+    output_name = "Sight Words Summary",
+    output_extension = ".xlsx",
+    button_label = "Download data",
+    button_type = "warning",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+
+
+
+# Phonics 
+
+```{r, layout = "l-page"}
+phonics_by_class <- phonics %>% 
+  group_by(class, word) %>% 
+  summarize(number_mastered = sum(mastered),
+            total = n()) %>% 
+  ungroup() %>% 
+  mutate(percentage_mastered = number_mastered / total) %>% 
+  mutate(percentage_pretty = percent(percentage_mastered, accuracy = 1)) %>% 
+  mutate(number_and_percent = str_glue("{number_mastered} ({percentage_pretty})")) %>% 
+  pivot_wider(id_cols = class, 
+              names_from = word,
+              values_from = number_and_percent)
+
+phonics_total <- phonics %>% 
+  group_by(word) %>% 
+  summarize(number_mastered = sum(mastered),
+            total = n()) %>% 
+  ungroup() %>% 
+  mutate(percentage_mastered = number_mastered / total) %>% 
+  mutate(percentage_pretty = percent(percentage_mastered, accuracy = 1)) %>% 
+  mutate(number_and_percent = str_glue("{number_mastered} ({percentage_pretty})")) %>% 
+  mutate(class = "Total") %>% 
+  pivot_wider(id_cols = class, 
+              names_from = word,
+              values_from = number_and_percent)
+
+phonics_by_class %>% 
+  bind_rows(phonics_total) %>% 
+  gt()
+```
+
+
+
+
