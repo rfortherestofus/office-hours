@@ -1,0 +1,18 @@
+---
+title: Weekly Report
+output: blastula::blastula_email
+--- 
+
+Dear Boss,
+
+Below is an analysis of the `iris` data:
+
+```{r}
+summary(iris)
+plot(iris[, -5])
+```
+
+Please let me know if it is not boring enough.
+
+Sincerely,  
+John

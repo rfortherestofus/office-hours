@@ -1,0 +1,72 @@
+---
+
+title: "Course Evaluations by Delivery Mode"
+author: "Jordan Trachtenberg"
+date: "r Sys.Date()"
+output:
+  # html_document:
+  #   df_print: paged
+  #   toc: yes
+  #   toc_depth: 3 # up to 3 depths of headings (specified by #, ##, and ###)
+  #   number_sections: true # if you want to number sections at each table header
+  #   theme: united # theme option
+  #   highlight: tango # specifies the syntax highlighting style
+  #   toc_float: yes
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    number_sections: true 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+
+
+```{r}
+course_evals <- read_csv("DeidentifiedData.csv") %>% 
+  clean_names()
+```
+
+
+```{r}
+# total_fy_sections <- 
+course_evals %>% 
+  filter((course %in% c("BE491", "BE560", "EMGT445")) == FALSE,
+         question_key == "226882-0",
+         startsWith(course_level, "100"),
+         endsWith(course, "L") == FALSE) %>% 
+  distinct(course_unique_id, mdc_course_delivery_mode, quarter, dept, course, course_level, section, mean) %>%   
+  group_by(dept, quarter) %>% 
+  summarize(all_sections = n_distinct(course_unique_id)) %>% 
+  ungroup()
+```
+
+```{r}
+library(hrbrmisc)
+
+
+
+course_evals %>% 
+  
+  # I broke these into multiple lines
+  
+  filter((!course %in% c("BE491", "BE560", "EMGT445"))) %>% 
+  filter(question_key == "226882-0") %>% 
+  filter(startsWith(course_level, "100")) %>%       
+  filter(endsWith(course, "L") == FALSE) %>% 
+  # filter(quarter == "2020-2021 Fall") %>%
+  
+  # Show .keep_all
+  distinct(course_unique_id, .keep_all = TRUE)
+%>%
+  group_by(dept, quarter) %>%
+  summarize(all_sections = n_distinct(course_unique_id)) %>%
+  ungroup()
+```
