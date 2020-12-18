@@ -20,9 +20,9 @@ test_message <- prepare_test_message() %>%
 smtp_send(
   test_message,
   to = "david@rfortherestofus.com",
-  from = "dgkeyes@gmail.com",
+  from = "david@rfortherestofus.com",
   subject = "Test",
-  credentials = creds_key("gmail"),
+  credentials = creds_key("rru"),
   verbose = FALSE
 )
 
