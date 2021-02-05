@@ -20,5 +20,9 @@ read_excel(path = "2021-02-05/REMOVE BLANK ROWS.xlsx") %>%
   mutate(is_blank = case_when(
     is.na(Q1) & is.na(Q2) & is.na(Q3) & is.na(Q4) ~ "blank")) # This is a comment
 
+library(naniar)
 
+read_excel(path = "2021-02-05/REMOVE BLANK ROWS.xlsx") %>%
+  select(-ID) %>%
+  miss_case_summary()
 
