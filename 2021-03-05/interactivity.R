@@ -35,6 +35,7 @@ penguins %>%
 
 
 
+
 # ggiraph -----------------------------------------------------------------
 
 # https://davidgohel.github.io/ggiraph/index.html
@@ -62,12 +63,16 @@ penguin_plot <- penguins %>%
   labs(title = "This is my incredible penguin plot",
        subtitle = "Aren't you just super impressed?")
 
-girafe(ggobj = penguin_plot,
+interactive_plot <- girafe(ggobj = penguin_plot,
        options = list(
          opts_tooltip(css = tooltip_css),
          opts_toolbar(saveaspng = FALSE)
        ))
 
+interactive_plot
+
+htmlwidgets::saveWidget(widget = interactive_plot,
+                        file = "interactive-graph.html")
 
 # plotly ------------------------------------------------------------------
 
