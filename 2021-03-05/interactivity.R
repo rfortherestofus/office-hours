@@ -60,7 +60,7 @@ penguin_plot <- penguins %>%
              y = bill_depth_mm,
              tooltip = bill_depth_mm)) +
   geom_point_interactive() +
-  labs(title = "This is my incredible penguin plot!",
+  labs(title = "This is my incredible penguin plot!!",
        subtitle = "Aren't you just super impressed?")
 
 interactive_plot <- girafe(ggobj = penguin_plot,
@@ -68,8 +68,6 @@ interactive_plot <- girafe(ggobj = penguin_plot,
          opts_tooltip(css = tooltip_css),
          opts_toolbar(saveaspng = FALSE)
        ))
-
-interactive_plot
 
 htmlwidgets::saveWidget(widget = interactive_plot,
                         file = "interactive-graph.html")
