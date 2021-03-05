@@ -60,7 +60,7 @@ penguin_plot <- penguins %>%
              y = bill_depth_mm,
              tooltip = bill_depth_mm)) +
   geom_point_interactive() +
-  labs(title = "This is my incredible penguin plot",
+  labs(title = "This is my incredible penguin plot!",
        subtitle = "Aren't you just super impressed?")
 
 interactive_plot <- girafe(ggobj = penguin_plot,
