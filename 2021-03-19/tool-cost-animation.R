@@ -75,7 +75,8 @@ data_tools_cost <- tribble(~tool, ~year_1) %>%
 # Create static plot
 data_tools_cost_plot <-
   data_tools_cost %>%
-  ggplot(aes(year, total_cost,
+  ggplot(aes(x = year,
+             y = total_cost,
              group = tool,
              color = tool,
              label = labels_cost)) +
@@ -89,8 +90,7 @@ data_tools_cost_plot <-
                   family = "Inter SemiBold",
                   size = 5) +
   coord_cartesian(clip = "off") +
-  scale_color_manual(guide = guide_legend(reverse = TRUE),
-                     values = c(
+  scale_color_manual(values = c(
                        "R" = "#6cabdd",
                        "SAS" = "#ff7400",
                        "Stata" = "#ec3325",
@@ -98,7 +98,8 @@ data_tools_cost_plot <-
                      )) +
   labs(title = "R costs far less over time than its competitors") +
   scale_y_continuous(labels = dollar_format(), limits = c(0, 23000)) +
-  scale_x_continuous(labels = c("Year 1", "2", "3", "4", "5"), breaks = 1:5) +
+  scale_x_continuous(labels = c("Year 1", "2", "3", "4", "5"),
+                     breaks = 1:5) +
   theme_ipsum(base_family = "Inter",
               base_size = 13) +
   theme(axis.title.x = element_blank(),
@@ -114,15 +115,16 @@ data_tools_cost_animation <-
   data_tools_cost_plot +
   # Reveal over the unique data index
   transition_reveal(
-    time_reveal, keep_last = TRUE
+    year, keep_last = TRUE
   )
 
+data_tools_cost_animation
 
 # Create gifs
 
 # Large on for web
 anim_save(data_tools_cost_animation,
-          filename = "2021-03-19/cost-over-time.gif",d
+          filename = "2021-03-19/cost-over-time.gif",
           nframes = 75,
           end_pause = 10,
           width = 1000,
