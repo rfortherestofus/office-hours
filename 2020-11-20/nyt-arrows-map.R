@@ -18,7 +18,8 @@ library(hrbrthemes)
 # Data comes from: https://github.com/tonmcg/US_County_Level_Election_Results_08-20
 
 election_results_2016 <- read_csv("https://github.com/tonmcg/US_County_Level_Election_Results_08-20/raw/master/2016_US_County_Level_Presidential_Results.csv") %>%
-  select(-X1) %>%
+  clean_names() %>%
+  select(-x1) %>%
   mutate(year = 2016) %>%
   mutate(per_point_diff = parse_number(per_point_diff)) %>%
   mutate(per_point_diff = per_point_diff / 100)

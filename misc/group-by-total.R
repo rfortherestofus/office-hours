@@ -18,16 +18,16 @@ overall_summary <- penguins %>%
 bind_rows(groups_summary,
           overall_summary)
 
-summarize_with_total <- function(df, group_by_var, mean_var) {
+summarize_with_total <- function(data_frame, group_by_var, mean_var) {
 
-  groups_summary <- df %>%
+  groups_summary <- data_frame %>%
     group_by({{ group_by_var }}) %>%
     summarize(mean = mean({{ mean_var }},
                           na.rm = TRUE)) %>%
     rename("group" = {{ group_by_var }} ) %>%
     mutate(group = as.character(group))
 
-  overall_summary <- df %>%
+  overall_summary <- data_frame %>%
     summarize(mean = mean({{ mean_var }},
                           na.rm = TRUE)) %>%
     mutate(group = "Total")
@@ -38,10 +38,7 @@ summarize_with_total <- function(df, group_by_var, mean_var) {
 }
 
 
-summarize_with_total(df = penguins,
+summarize_with_total(data_frame = penguins,
                      group_by_var = island,
                      mean_var = body_mass_g)
 
-summarize_with_total(df = mtcars,
-                     group_by_var = cyl,
-                     mean_var = mpg)
